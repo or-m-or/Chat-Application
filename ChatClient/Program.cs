@@ -1,7 +1,24 @@
-ï»¿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Threading.Tasks;
+//namespace ChatClient
+//{
+//    internal static class Program
+//    {
+//        /// <summary>
+//        ///  The main entry point for the application.
+//        /// </summary>
+//        [STAThread]
+//        static void Main()
+//        {
+//            // To customize application configuration such as set high DPI settings or default font,
+//            // see https://aka.ms/applicationconfiguration.
+//            ApplicationConfiguration.Initialize();
+//            Application.Run(new Form1());
+//        }
+//    }
+//}
+
+using System;
+using System.Net.Sockets;
+using System.Text;
 using System.Windows.Forms;
 
 namespace ChatClient
@@ -9,14 +26,52 @@ namespace ChatClient
     internal static class Program
     {
         /// <summary>
-        /// í•´ë‹¹ ì• í”Œë¦¬ì¼€ì´ì…˜ì˜ ì£¼ ì§„ì…ì ì…ë‹ˆë‹¤.
+        /// ÇØ´ç ¾ÖÇÃ¸®ÄÉÀÌ¼ÇÀÇ ÁÖ ÁøÀÔÁ¡ÀÔ´Ï´Ù.
         /// </summary>
         [STAThread]
         static void Main()
         {
-            Application.EnableVisualStyles();
-            Application.SetCompatibleTextRenderingDefault(false);
-            Application.Run(new Form1());
+            // ¼­¹ö ÁÖ¼Ò¿Í Àü¼ÛÇÒ ¸Ş½ÃÁö
+            Connect("127.0.0.1", "Hello from WinForms project!");
+
+            Console.WriteLine("¾Æ¹« Å°³ª ´©¸£¸é Á¾·áµË´Ï´Ù...");
+            Console.ReadKey(); // ÄÜ¼Ö À¯Áö
+        }
+
+        static void Connect(string server, string message)
+        {
+            try
+            {
+                int port = 27015; // Æ÷Æ®´Â ¼­¹ö¿Í ¹İµå½Ã ÀÏÄ¡ÇØ¾ß ÇÔ
+
+                using TcpClient client = new TcpClient(server, port);
+
+                // ¸Ş½ÃÁö¸¦ ASCII ¹ÙÀÌÆ® ¹è¿­·Î º¯È¯
+                byte[] data = Encoding.ASCII.GetBytes(message);
+
+                // NetworkStreamÀ¸·Î ¼Û¼ö½Å
+                NetworkStream stream = client.GetStream();
+
+                // ¸Ş½ÃÁö Àü¼Û
+                stream.Write(data, 0, data.Length);
+                Console.WriteLine("¼­¹ö¿¡ ¸Ş½ÃÁö¸¦ º¸³Â½À´Ï´Ù: {0}", message);
+
+                // ¼­¹ö ÀÀ´ä ¼ö½Å
+                data = new byte[256];
+                string responseData = string.Empty;
+
+                int bytes = stream.Read(data, 0, data.Length);
+                responseData = Encoding.ASCII.GetString(data, 0, bytes);
+                Console.WriteLine("¼­¹ö·ÎºÎÅÍ ÀÀ´äÀ» ¹Ş¾Ò½À´Ï´Ù: {0}", responseData);
+            }
+            catch (ArgumentNullException e)
+            {
+                Console.WriteLine("A[¿¹¿Ü] ÀÎÀÚ°¡ Àß¸øµÇ¾ú½À´Ï´Ù: {0}", e);
+            }
+            catch (SocketException e)
+            {
+                Console.WriteLine("[¿¹¿Ü] ¼ÒÄÏ ¿À·ù ¹ß»ı: {0}", e);
+            }
         }
     }
 }
