@@ -11,6 +11,10 @@
 #include <unordered_map>	// key-value (순서X/Hash Table)
 #include <unordered_set>	// 집합 (순서X/Hash Table)
 
+// 스레드
+#include <mutex>
+
+// 윈속
 #include <winsock2.h>
 #include <ws2tcpip.h>
 #pragma comment(lib, "Ws2_32.lib")

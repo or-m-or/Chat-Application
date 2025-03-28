@@ -1,11 +1,10 @@
 #include "pch.h"
 #include "SocketUtils.h"
 
-
 bool SocketUtils::Init()
 {
 	WSADATA wsaData;
-	int result = WSAStartup(MAKEWORD(2, 2), &wsaData); // 버전 2.2 사용 요청
+	int32 result = WSAStartup(MAKEWORD(2, 2), &wsaData); // 버전 2.2 사용 요청
 	if (result != 0)
 	{
 		std::cerr << "Windows 소켓 초기화 실패: " << result << std::endl;
@@ -24,7 +23,7 @@ bool SocketUtils::GetAddress(const string& port, addrinfo*& outResult)
 	hints.ai_flags = AI_PASSIVE;		// 서버 바인딩용
 
 	// 주소 정보 조회
-	int result = getaddrinfo(NULL, port.c_str(), &hints, &outResult);
+	int32 result = getaddrinfo(NULL, port.c_str(), &hints, &outResult);
 	if (result != 0)
 	{
 		std::cerr << "주소정보 조회 실패: " << result << std::endl;
@@ -43,7 +42,7 @@ bool SocketUtils::Bind(SOCKET socket, const string& port, addrinfo*& outResult)
 	if (!GetAddress(port, outResult))
 		return false;
 
-	if (bind(socket, outResult->ai_addr, static_cast<int>(outResult->ai_addrlen)) == SOCKET_ERROR)
+	if (bind(socket, outResult->ai_addr, static_cast<int32>(outResult->ai_addrlen)) == SOCKET_ERROR)
 	{
 		std::cerr << "바인딩 실패: " << WSAGetLastError() << std::endl;
 		freeaddrinfo(outResult);

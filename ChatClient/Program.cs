@@ -15,63 +15,82 @@
 //        }
 //    }
 //}
-
 using System;
 using System.Net.Sockets;
 using System.Text;
-using System.Windows.Forms;
+using System.Threading;
 
 namespace ChatClient
 {
-    internal static class Program
+    class Program
     {
-        /// <summary>
-        /// 해당 애플리케이션의 주 진입점입니다.
-        /// </summary>
-        [STAThread]
-        static void Main()
-        {
-            // 서버 주소와 전송할 메시지
-            Connect("127.0.0.1", "Hello from WinForms project!");
+        static TcpClient client = null!;
+        static NetworkStream stream = null!;
+        static bool running = true;
 
-            Console.WriteLine("아무 키나 누르면 종료됩니다...");
-            Console.ReadKey(); // 콘솔 유지
-        }
-
-        static void Connect(string server, string message)
+        static void Main(string[] args)
         {
             try
             {
-                int port = 27015; // 포트는 서버와 반드시 일치해야 함
+                client = new TcpClient("127.0.0.1", 27015);
+                stream = client.GetStream();
 
-                using TcpClient client = new TcpClient(server, port);
+                Console.WriteLine("서버에 연결되었습니다. 채팅을 시작하세요!");
 
-                // 메시지를 ASCII 바이트 배열로 변환
-                byte[] data = Encoding.ASCII.GetBytes(message);
+                // 수신 스레드 시작
+                Thread recvThread = new Thread(ReceiveLoop);
+                recvThread.Start();
 
-                // NetworkStream으로 송수신
-                NetworkStream stream = client.GetStream();
+                // 송신 루프 (메인 스레드)
+                while (running)
+                {
+                    string message = Console.ReadLine() ?? "";
+                    if (message.ToLower() == "/exit")
+                    {
+                        running = false;
+                        break;
+                    }
 
-                // 메시지 전송
-                stream.Write(data, 0, data.Length);
-                Console.WriteLine("서버에 메시지를 보냈습니다: {0}", message);
+                    byte[] data = Encoding.UTF8.GetBytes(message);
+                    stream.Write(data, 0, data.Length);
+                }
 
-                // 서버 응답 수신
-                data = new byte[256];
-                string responseData = string.Empty;
-
-                int bytes = stream.Read(data, 0, data.Length);
-                responseData = Encoding.ASCII.GetString(data, 0, bytes);
-                Console.WriteLine("서버로부터 응답을 받았습니다: {0}", responseData);
+                stream.Close();
+                client.Close();
+                Console.WriteLine("채팅 종료");
             }
-            catch (ArgumentNullException e)
+            catch (Exception e)
             {
-                Console.WriteLine("A[예외] 인자가 잘못되었습니다: {0}", e);
+                Console.WriteLine($"[예외] {e.Message}");
             }
-            catch (SocketException e)
+        }
+
+        static void ReceiveLoop()
+        {
+            byte[] buffer = new byte[1024];
+
+            try
             {
-                Console.WriteLine("[예외] 소켓 오류 발생: {0}", e);
+                while (running)
+                {
+                    int bytes = stream.Read(buffer, 0, buffer.Length);
+                    if (bytes == 0)
+                    {
+                        Console.WriteLine("서버와 연결이 종료되었습니다.");
+                        break;
+                    }
+
+                    string msg = Encoding.UTF8.GetString(buffer, 0, bytes);
+                    Console.WriteLine($"\n[서버] {msg}");
+                    Console.Write("> "); // 입력 표시
+                }
             }
+            catch (Exception e)
+            {
+                Console.WriteLine($"[수신 오류] {e.Message}");
+            }
+
+            running = false;
         }
     }
 }
