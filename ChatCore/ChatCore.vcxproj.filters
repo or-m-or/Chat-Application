@@ -30,6 +30,7 @@
     <ClInclude Include="GlobalManager.h">
       <Filter>Core</Filter>
     </ClInclude>
+    <ClInclude Include="test.h" />
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="pch.cpp">
@@ -47,5 +48,6 @@
     <ClCompile Include="GlobalManager.cpp">
       <Filter>Core</Filter>
     </ClCompile>
+    <ClCompile Include="test.cpp" />
   </ItemGroup>
 </Project>

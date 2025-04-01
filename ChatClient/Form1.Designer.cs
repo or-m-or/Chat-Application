@@ -28,12 +28,55 @@
         /// </summary>
         private void InitializeComponent()
         {
-            this.components = new System.ComponentModel.Container();
-            this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
-            this.ClientSize = new System.Drawing.Size(800, 450);
-            this.Text = "Form1";
+            textBox1 = new TextBox();
+            textBox2 = new TextBox();
+            button1 = new Button();
+            SuspendLayout();
+            // 
+            // textBox1
+            // 
+            textBox1.Location = new Point(18, 615);
+            textBox1.Name = "textBox1";
+            textBox1.Size = new Size(450, 27);
+            textBox1.TabIndex = 1;
+            textBox1.KeyPress += textBox1_KeyPress;
+            // 
+            // textBox2
+            // 
+            textBox2.Location = new Point(18, 68);
+            textBox2.Multiline = true;
+            textBox2.Name = "textBox2";
+            textBox2.Size = new Size(450, 527);
+            textBox2.TabIndex = 2;
+            // 
+            // button1
+            // 
+            button1.Location = new Point(374, 24);
+            button1.Name = "button1";
+            button1.Size = new Size(94, 29);
+            button1.TabIndex = 3;
+            button1.Text = "Connect";
+            button1.UseVisualStyleBackColor = true;
+            button1.Click += button1_Click;
+            // 
+            // Form1
+            // 
+            AutoScaleDimensions = new SizeF(9F, 20F);
+            AutoScaleMode = AutoScaleMode.Font;
+            ClientSize = new Size(485, 661);
+            Controls.Add(button1);
+            Controls.Add(textBox2);
+            Controls.Add(textBox1);
+            Name = "Form1";
+            Text = "Form1";
+            Load += Form1_Load;
+            ResumeLayout(false);
+            PerformLayout();
         }
 
         #endregion
+        private TextBox textBox1;
+        private TextBox textBox2;
+        private Button button1;
     }
 }

@@ -30,8 +30,8 @@ void Broadcast(const char* data, int32 len, SOCKET sender)
 	lock_guard<mutex> guard(GClientLock);
 	for (SOCKET client : GClients)
 	{
-		if (client != sender)
-			send(client, data, len, 0); // 간단한 브로드캐스트
+		// if (client != sender)
+		send(client, data, len, 0); // 간단한 브로드캐스트
 	}
 }
 
@@ -117,36 +117,6 @@ int main()
 	}
 
 	SocketUtils::Close(listenSocket); // 리스닝 소켓
-
-	////=============================== 데이터 송수신 루프 =======================================
-	//char recvbuf[DEFAULT_BUFLEN];   // 수신 버퍼
-	//int32 recvResult = 0;
-
-	//do {
-	//	// 클라이언트로부터 데이터 수신
-	//	recvResult = recv(clientSocket, recvbuf, DEFAULT_BUFLEN, 0);
-	//	if (recvResult > 0) 
-	//	{
-	//		// 받은 데이터 그대로 다시 전송 (에코)
-	//		std::cout << "클라이언트로부터 " << recvResult << "바이트 수신됨\n";
-	//		if (send(clientSocket, recvbuf, recvResult, 0) == SOCKET_ERROR)
-	//			HandleError("전송 실패!", clientSocket);
-	//	}
-	//	else if (recvResult == 0)
-	//	{
-	//		std::cout << "클라이언트가 연결을 종료했습니다.\n";
-	//	}
-	//	else
-	//	{
-	//		HandleError("수신 실패!", clientSocket);
-	//	}
-	//} while (recvResult > 0);
-
-	//// 송신 종료 및 정리
-	//if (shutdown(clientSocket, SD_SEND) == SOCKET_ERROR)
-	//	HandleError("종료 실패!", clientSocket);
-
-	SocketUtils::Close(listenSocket);
 	SocketUtils::Cleanup();
 	GThreadManager->Join();
 
