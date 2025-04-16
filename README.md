@@ -57,7 +57,7 @@ Chat-Application
 | **멀티스레딩 (std::thread)** | 클라이언트별로 스레드 생성 | `ThreadManager 클래스`, `ChatServer.cpp` |
 | **전역 객체 관리** | `GThreadManager`를 통한 스레드 접근 | `GlobalManager 클래스`, `ChatServer.cpp` |
 | **Broadcast 메시지 처리** | 클라이언트 목록 순회 후 `send()` | `ChatServer.cpp` |
-| **Socket 유틸리티 클래스화** | `SocketUtils::Init()`, `Accept()` 등으로 추상화 | `SocketUtils.*` |
+| **Socket 유틸리티 클래스화** | `SocketUtils::Init()`, `Accept()` 등으로 추상화 | `SocketUtils 클래스` |
 
 
 ### ChatClient
