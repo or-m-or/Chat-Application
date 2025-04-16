@@ -46,16 +46,16 @@ Chat-Application
 - Windows 플랫폼 기반 개발
 - **Precompiled Header 사용** (`pch.h`, `pch.cpp`): 컴파일 속도 최적화
 - **공통 타입 정의** (`Types.h`): 고정 크기 정수 타입 정의 (`int32`, `uint64` 등)
-- **STL 활용** (`vector`, `thread`, `mutex`, `function` 등 - `ThreadManager.*`, `ChatServer.cpp` 등에서 사용)
+- **STL 활용** (`vector`, `thread`, `mutex`, `function` 등 - `ThreadManager 클래스`, `ChatServer.cpp` 등에서 사용)
 
 ### ChatServer
 
 | 기술 | 설명 | 적용 파일 |
 |------|------|-----------|
-| **Winsock2 API** | TCP 소켓 초기화, 바인딩, 수신, 전송 | `SocketUtils.*`, `ChatServer.cpp` |
+| **Winsock2 API** | TCP 소켓 초기화, 바인딩, 수신, 전송 | `SocketUtils 클래스`, `ChatServer.cpp` |
 | **Blocking 소켓 통신** | `recv`, `send`, `accept` 등 사용 | `ChatServer.cpp` |
-| **멀티스레딩 (std::thread)** | 클라이언트별로 스레드 생성 | `ThreadManager.*`, `ChatServer.cpp` |
-| **전역 객체 관리** | `GThreadManager`를 통한 스레드 접근 | `GlobalManager.*`, `ChatServer.cpp` |
+| **멀티스레딩 (std::thread)** | 클라이언트별로 스레드 생성 | `ThreadManager 클래스`, `ChatServer.cpp` |
+| **전역 객체 관리** | `GThreadManager`를 통한 스레드 접근 | `GlobalManager 클래스`, `ChatServer.cpp` |
 | **Broadcast 메시지 처리** | 클라이언트 목록 순회 후 `send()` | `ChatServer.cpp` |
 | **Socket 유틸리티 클래스화** | `SocketUtils::Init()`, `Accept()` 등으로 추상화 | `SocketUtils.*` |
 
